@@ -26,11 +26,12 @@ if (!fs.existsSync('./programmers.json')) {
 // Build our routes
 
 app.get('/', (req, res) => {
-  res.send('Fill me in to return ALL programmers!');
+  res.send(JSON.stringify(database));
 });
 
 app.get('/:id', (req, res) => {
   const id = req.params.id;
+
 
   res.send(`Fill me in to return values with ID: ${id}`);
 });
@@ -38,15 +39,22 @@ app.get('/:id', (req, res) => {
 app.put('/:id', (req, res) => {
   const id = req.params.id;
 
-  res.send(`Fill me in to update values with ID: ${id}`);
+  res.send(`Fill me in to update values with ID, loser: ${id}`);
 });
 
-app.post('/', (req, res) => {
-  const body = req.body; // Hold your JSON in here!
+// app.post('/', (req, res) => {
+//   const body = req.body; // Hold your JSON in here!
+//
+//   res.send(`You sent: ${body}`);
+// });
 
-  res.send(`You sent: ${body}`);
+app.post('/', (req,res) => {
+        //console.log(req.body);
+        const body = req.body;
+        database[req.body] = body
+        //console.log(people)
+        res.send(`WOW you sent something: ${req.body}`);
 });
-
 // IMPLEMENT A ROUTE TO HANDLE ALL OTHER ROUTES AND RETURN AN ERROR MESSAGE
 
 app.listen(port, () => {
