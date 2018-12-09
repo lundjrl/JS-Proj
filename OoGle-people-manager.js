@@ -25,38 +25,42 @@ if (!fs.existsSync('./programmers.json')) {
 
 // Build our routes
 
+//Gets hard data from the programmers.json file
 app.get('/', (req, res) => {
-  res.send(JSON.stringify(database));
+  res.json(database);
 });
 
+//Gets the id of a programmer located within our programmers.json
 app.get('/:id', (req, res) => {
-  const id = req.params.id;
-
-
-  res.send(`Fill me in to return values with ID: ${id}`);
+  const { id } = req.params;
+  const found = database.find(record => record.SID === id);
+  res.json(found)
 });
 
+//Puts an id of a slave onto the server-page
 app.put('/:id', (req, res) => {
   const id = req.params.id;
+  let index;
+  const found = database.map((user, idx) => {
+    if(user.SID === id){
+      index = idx;
+    }
+  });
 
-  res.send(`Fill me in to update values with ID, loser: ${id}`);
+  const updatedUser = {...database[index], ...req.body};
+  database[index] = updatedUser;
+  res.json(updatedUser);
 });
 
-// app.post('/', (req, res) => {
-//   const body = req.body; // Hold your JSON in here!
-//
-//   res.send(`You sent: ${body}`);
-// });
-
+//Posts a new programmer to our server :D
 app.post('/', (req,res) => {
-        //console.log(req.body);
         const body = req.body;
-        database[req.body] = body
-        //console.log(people)
-        res.send(`WOW you sent something: ${req.body}`);
+        database.push(body);
+        res.json(body);
 });
 // IMPLEMENT A ROUTE TO HANDLE ALL OTHER ROUTES AND RETURN AN ERROR MESSAGE
 
+app.all('*', (req, res) => res.json('That route does not exitst!'));
 app.listen(port, () => {
   console.log(`She's alive on port ${port}`);
 });
